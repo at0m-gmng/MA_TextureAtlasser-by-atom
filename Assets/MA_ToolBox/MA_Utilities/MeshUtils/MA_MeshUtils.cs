@@ -21,9 +21,34 @@ namespace MA_Mesh
 			}
 
 			string assetPath = savePath + mesh.name + ".asset";
+			Mesh existingMesh = AssetDatabase.LoadAssetAtPath<Mesh>(assetPath);
 
-			AssetDatabase.CreateAsset(mesh, assetPath);
-			AssetDatabase.SaveAssets();
+			if (existingMesh != null)
+			{
+				existingMesh.Clear();
+				existingMesh.vertices = mesh.vertices;
+				existingMesh.triangles = mesh.triangles;
+				existingMesh.normals = mesh.normals;
+				existingMesh.uv = mesh.uv;
+				existingMesh.tangents = mesh.tangents;
+				existingMesh.colors = mesh.colors;
+				existingMesh.subMeshCount = mesh.subMeshCount;
+				for (int i = 0; i < mesh.subMeshCount; i++)
+				{
+					existingMesh.SetTriangles(mesh.GetTriangles(i), i);
+				}
+				existingMesh.RecalculateBounds();
+
+				EditorUtility.SetDirty(existingMesh);
+				AssetDatabase.SaveAssets();
+				Debug.Log($"Updated existing mesh at: {assetPath}");
+			}
+			else
+			{
+				AssetDatabase.CreateAsset(mesh, assetPath);
+				AssetDatabase.SaveAssets();
+				Debug.Log($"Created new mesh at: {assetPath}");
+			}
 
 			return assetPath;
 		}

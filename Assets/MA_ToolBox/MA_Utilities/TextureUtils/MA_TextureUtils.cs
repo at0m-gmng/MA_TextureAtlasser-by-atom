@@ -58,24 +58,28 @@ namespace MA_Texture
         #region Save
         public static Texture2D MA_Save2D(this Texture2D texture, string textureName, string savePath)
         {
-            if (!Directory.Exists(savePath))
-                Directory.CreateDirectory(savePath);
+	        string filePath = savePath + textureName + ".png";
 
-            FileStream fs = new FileStream(savePath + "/" + textureName + ".png", FileMode.Create);
-            BinaryWriter bw = new BinaryWriter(fs);
+	        if (File.Exists(filePath))
+	        {
+		        File.WriteAllBytes(filePath, texture.EncodeToPNG());
+		        Debug.Log($"Updated existing texture at: {filePath}");
+	        }
+	        else
+	        {
+		        if (!Directory.Exists(savePath))
+			        Directory.CreateDirectory(savePath);
+		        File.WriteAllBytes(filePath, texture.EncodeToPNG());
+		        Debug.Log($"Created new texture at: {filePath}");
+	        }
 
-            bw.Write(texture.EncodeToPNG());
-            bw.Close();
-            fs.Close();
-
-            AssetDatabase.Refresh();
-
-            return texture;
+	        AssetDatabase.Refresh();
+	        return texture;
         }
 
         public static Texture MA_Save(this Texture texture, string name, string savePath)
         {
-            Texture2D texture2D = (Texture2D)ConvertToReadableTexture(texture);
+            Texture2D texture2D = (Texture2D)MA_TextureUtils.ConvertToReadableTexture(texture);
 
             texture2D.MA_Save2D(name, savePath);
 
@@ -94,7 +98,7 @@ namespace MA_Texture
 
         public static Texture MA_Scale(this Texture texture, int width, int height, TextureScaleMode scaleMode)
         {
-			Texture2D texture2D = (Texture2D)ConvertToReadableTexture(texture);
+			Texture2D texture2D = (Texture2D)MA_TextureUtils.ConvertToReadableTexture(texture);
 
 			texture2D.MA_Scale2D(width, height, scaleMode);
 
@@ -217,8 +221,8 @@ namespace MA_Texture
 
         public static Texture MA_Combine(this Texture texture, Texture combineTexture, int offsetX, int offsetY)
         {
-            Texture2D texture2D = (Texture2D)ConvertToReadableTexture(texture);
-            Texture2D combineTexture2D = (Texture2D)ConvertToReadableTexture(combineTexture);
+            Texture2D texture2D = (Texture2D)MA_TextureUtils.ConvertToReadableTexture(texture);
+            Texture2D combineTexture2D = (Texture2D)MA_TextureUtils.ConvertToReadableTexture(combineTexture);
 
             texture = texture2D.MA_Combine2D(combineTexture2D, offsetX, offsetY);
 
