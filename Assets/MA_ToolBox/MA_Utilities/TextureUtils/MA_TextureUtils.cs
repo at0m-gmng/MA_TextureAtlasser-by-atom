@@ -11,9 +11,6 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System;
 
 namespace MA_Texture
 {
@@ -78,7 +75,7 @@ namespace MA_Texture
 
         public static Texture MA_Save(this Texture texture, string name, string savePath)
         {
-            Texture2D texture2D = (Texture2D)MA_TextureUtils.ConvertToReadableTexture(texture);
+            Texture2D texture2D = (Texture2D)ConvertToReadableTexture(texture);
 
             texture2D.MA_Save2D(name, savePath);
 
@@ -97,7 +94,7 @@ namespace MA_Texture
 
         public static Texture MA_Scale(this Texture texture, int width, int height, TextureScaleMode scaleMode)
         {
-			Texture2D texture2D = (Texture2D)MA_TextureUtils.ConvertToReadableTexture(texture);
+			Texture2D texture2D = (Texture2D)ConvertToReadableTexture(texture);
 
 			texture2D.MA_Scale2D(width, height, scaleMode);
 
@@ -122,7 +119,7 @@ namespace MA_Texture
 
 			}
 
-			texture.Resize(newWidth, newHeight);
+			texture.Reinitialize(newWidth, newHeight);
 			texture.SetPixels(newColors);
 			texture.Apply();
 
@@ -220,8 +217,8 @@ namespace MA_Texture
 
         public static Texture MA_Combine(this Texture texture, Texture combineTexture, int offsetX, int offsetY)
         {
-            Texture2D texture2D = (Texture2D)MA_TextureUtils.ConvertToReadableTexture(texture);
-            Texture2D combineTexture2D = (Texture2D)MA_TextureUtils.ConvertToReadableTexture(combineTexture);
+            Texture2D texture2D = (Texture2D)ConvertToReadableTexture(texture);
+            Texture2D combineTexture2D = (Texture2D)ConvertToReadableTexture(combineTexture);
 
             texture = texture2D.MA_Combine2D(combineTexture2D, offsetX, offsetY);
 

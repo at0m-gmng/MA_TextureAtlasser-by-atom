@@ -1,9 +1,7 @@
 #if UNITY_EDITOR
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using MA_Editor;
 
 namespace MA_TextureAtlasserPro
 {
@@ -60,7 +58,7 @@ namespace MA_TextureAtlasserPro
 			GUILayout.FlexibleSpace();
 			var tempColor = GUI.backgroundColor;
 			GUI.backgroundColor = new Color(1, 1, 1, 0.7f);
-			GUILayout.Label(" " + this.name + " ", GUI.skin.box);
+			GUILayout.Label(" " + name + " ", GUI.skin.box);
 			GUI.backgroundColor = tempColor;
 			GUILayout.FlexibleSpace();
 			GUILayout.EndHorizontal();

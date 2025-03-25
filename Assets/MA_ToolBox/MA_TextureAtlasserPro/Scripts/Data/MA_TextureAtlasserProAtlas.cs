@@ -1,10 +1,7 @@
 #if UNITY_EDITOR
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using MA_Editor;
-using MA_Editor.Grid;
 
 namespace MA_TextureAtlasserPro
 {
@@ -37,7 +34,7 @@ namespace MA_TextureAtlasserPro
 
 			GUI.backgroundColor = new Color(0, 0, 0, 0.1f);
 			GUI.Box(editorWorkRect, "");
-			GUI.Box(new Rect(editorWorkRect.x, editorWorkRect.y - 25, editorWorkRect.width, 20), this.name);
+			GUI.Box(new Rect(editorWorkRect.x, editorWorkRect.y - 25, editorWorkRect.width, 20), name);
 			GUI.backgroundColor = Color.white;
 
 			MA_Editor.Grid.Grid.DrawZoomableGrid(editorWorkRect, 64, new Color(0, 0, 0, 0.1f), zoomCoordsOrigin);

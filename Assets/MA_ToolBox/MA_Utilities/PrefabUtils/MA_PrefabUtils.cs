@@ -1,6 +1,4 @@
-﻿//-
-
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -24,7 +22,7 @@ namespace MA_Toolbox.Utils.Editor
             string assetPath = savePath + prefabName + ".prefab";
 
             PrefabUtility.SaveAsPrefabAsset(gameObject, assetPath);
-            UnityEngine.Object.DestroyImmediate(gameObject);
+            Object.DestroyImmediate(gameObject);
 
             return assetPath;
         }
@@ -34,7 +32,7 @@ namespace MA_Toolbox.Utils.Editor
             GameObject p = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
             child.transform.SetParent(p.transform);
             PrefabUtility.ApplyPrefabInstance(p, InteractionMode.AutomatedAction);
-            UnityEngine.Object.DestroyImmediate(p);
+            Object.DestroyImmediate(p);
         }
     }
 }
