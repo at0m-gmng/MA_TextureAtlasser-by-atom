@@ -11,9 +11,6 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System;
 
 namespace MA_Texture
 {
@@ -61,19 +58,23 @@ namespace MA_Texture
         #region Save
         public static Texture2D MA_Save2D(this Texture2D texture, string textureName, string savePath)
         {
-            if (!Directory.Exists(savePath))
-                Directory.CreateDirectory(savePath);
+	        string filePath = savePath + textureName + ".png";
 
-            FileStream fs = new FileStream(savePath + "/" + textureName + ".png", FileMode.Create);
-            BinaryWriter bw = new BinaryWriter(fs);
+	        if (File.Exists(filePath))
+	        {
+		        File.WriteAllBytes(filePath, texture.EncodeToPNG());
+		        Debug.Log($"Updated existing texture at: {filePath}");
+	        }
+	        else
+	        {
+		        if (!Directory.Exists(savePath))
+			        Directory.CreateDirectory(savePath);
+		        File.WriteAllBytes(filePath, texture.EncodeToPNG());
+		        Debug.Log($"Created new texture at: {filePath}");
+	        }
 
-            bw.Write(texture.EncodeToPNG());
-            bw.Close();
-            fs.Close();
-
-            AssetDatabase.Refresh();
-
-            return texture;
+	        AssetDatabase.Refresh();
+	        return texture;
         }
 
         public static Texture MA_Save(this Texture texture, string name, string savePath)
@@ -122,7 +123,7 @@ namespace MA_Texture
 
 			}
 
-			texture.Resize(newWidth, newHeight);
+			texture.Reinitialize(newWidth, newHeight);
 			texture.SetPixels(newColors);
 			texture.Apply();
 

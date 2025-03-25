@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -566,11 +565,11 @@ namespace MA_TextureAtlasserPro
                 switch (textureExportSettings.textureType)
                 {
                     case TextureType.Default:
-                        {
-                            TextureImporter textureImporter = (TextureImporter)AssetImporter.GetAtPath(savePathTextures + newTexture.name + '.' + textureExportSettings.textureFormat.ToString());
-                            textureImporter.textureType = TextureImporterType.Default;
-                            textureImporter.SaveAndReimport();
-                        }
+                    {
+                        TextureImporter textureImporter = (TextureImporter)AssetImporter.GetAtPath(savePathTextures + newTexture.name + '.' + textureExportSettings.textureFormat.ToString());
+                        textureImporter.textureType = TextureImporterType.Default;
+                        textureImporter.SaveAndReimport();
+                    }
                         break;
                     case TextureType.Sprite:
                         SetAtlasSpriteSettings(atlas, textureExportSettings, savePathTextures);
@@ -640,24 +639,54 @@ namespace MA_TextureAtlasserPro
         {
             if (atlas == null || atlas.textureQuads == null || atlas.textureGroupRegistration == null)
             {
+                Debug.LogError("Invalid input data for material export.");
                 return null;
             }
 
-            //Directories.
             string savePathMaterial = savePath + atlas.name + "/Materials/";
             CreateFolder(savePathMaterial);
+            
+            string assetPath = savePathMaterial + atlas.name + ".mat";
+
+            Material existingMaterial = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
 
             Shader shader = materialExportSettings.shader;
-            if (shader)
+            if (shader == null)
+            {
+                Debug.LogError("Shader not specified for material.");
+                return null;
+            }
+
+            if (existingMaterial != null)
+            {
+                existingMaterial.shader = shader;
+
+                if (textures != null && materialExportSettings.shaderPropertyNames != null)
+                {
+                    for (int i = 0; i < Mathf.Min(materialExportSettings.shaderPropertyNames.Count, textures.Length); i++)
+                    {
+                        Texture t = AssetDatabase.LoadAssetAtPath<Texture>(textures[i]);
+                        if (t != null)
+                        {
+                            existingMaterial.SetTexture(materialExportSettings.shaderPropertyNames[i], t);
+                        }
+                    }
+                }
+
+                EditorUtility.SetDirty(existingMaterial);
+                AssetDatabase.SaveAssets();
+                Debug.Log($"Updated existing material at: {assetPath}");
+            }
+            else
             {
                 Material material = new Material(shader)
                 {
                     name = atlas.name
                 };
 
-                if (textures != null)
+                if (textures != null && materialExportSettings.shaderPropertyNames != null)
                 {
-                    for (int i = 0; i < (int)Mathf.Min(materialExportSettings.shaderPropertyNames.Count, textures.Length); i++)
+                    for (int i = 0; i < Mathf.Min(materialExportSettings.shaderPropertyNames.Count, textures.Length); i++)
                     {
                         Texture t = AssetDatabase.LoadAssetAtPath<Texture>(textures[i]);
                         if (t != null)
@@ -667,16 +696,12 @@ namespace MA_TextureAtlasserPro
                     }
                 }
 
-                string assetPath = savePathMaterial + material.name + ".mat";
-
-                //Save material
                 AssetDatabase.CreateAsset(material, assetPath);
                 AssetDatabase.Refresh();
-
-                return assetPath;
+                Debug.Log($"Created new material at: {assetPath}");
             }
 
-            return null;
+            return assetPath;
         }
         #endregion
     }

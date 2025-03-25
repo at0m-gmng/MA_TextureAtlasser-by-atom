@@ -5,12 +5,10 @@
 
 #if UNITY_EDITOR
 using UnityEngine;
-using MA_Editor;
 using MA_Editor.RectUtils;
 
 namespace MA_Editor.GUILayoutZoom
 {
-	//http://martinecker.com/martincodes/unity-editor-window-zooming/
 	public class GUILayoutZoom
 	{
 		private const float EditorWindowTabHeight = 21.0f; //The height of the editor window top bar. (were the name, zoom and exit buttons are)

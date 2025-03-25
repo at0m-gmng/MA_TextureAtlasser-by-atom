@@ -1,8 +1,5 @@
 ﻿#if UNITY_EDITOR
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using MA_Editor;
 using MA_Editor.GUILayoutZoom;
 using MA_Editor.RectUtils;
 

@@ -1,6 +1,4 @@
-﻿//-
-
-using UnityEditor;
+﻿#if UNITY_EDITOR
 using UnityEngine;
 
 namespace MA_Toolbox.Utils
@@ -26,3 +24,4 @@ namespace MA_Toolbox.Utils
         }
     }
 }
+#endif

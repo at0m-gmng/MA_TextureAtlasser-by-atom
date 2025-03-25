@@ -5,13 +5,11 @@
 
 #if UNITY_EDITOR
 using UnityEngine;
-using MA_Editor;
 
 namespace MA_Editor.RectUtils
 {
 	public static class RectUtils
 	{
-		//Start			http://martinecker.com/martincodes/unity-editor-window-zooming/
 		public static Vector2 TopLeft(this Rect rect)
 		{
 			return new Vector2(rect.xMin, rect.yMin);
